@@ -1,4 +1,3 @@
-
-.hello{
-    transform: translateY(-50%);
+body{
+    min-width: 500px;
 }

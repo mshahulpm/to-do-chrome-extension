@@ -1,13 +1,14 @@
-import Login from "./pages/Login"
+import Layout from "./Layout"
+import Home from "./pages/Home"
 
 
 
 function App() {
 
   return (
-    <>
-      <Login />
-    </>
+    <Layout>
+      <Home />
+    </Layout>
   )
 }
 
