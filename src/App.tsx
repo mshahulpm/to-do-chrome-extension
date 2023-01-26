@@ -1,3 +1,4 @@
+import { AppProvider } from "./context/AppContext"
 import Layout from "./Layout"
 import Home from "./pages/Home"
 
@@ -6,9 +7,11 @@ import Home from "./pages/Home"
 function App() {
 
   return (
-    <Layout>
-      <Home />
-    </Layout>
+    <AppProvider>
+      <Layout>
+        <Home />
+      </Layout>
+    </AppProvider>
   )
 }
 

@@ -2,28 +2,28 @@ import {
     Box,
     Flex,
     Text,
-    IconButton,
-    Button,
     Stack,
-    Collapse,
-    Icon,
     Link,
     Popover,
+    Button,
+    Icon,
     PopoverTrigger,
     PopoverContent,
     useColorModeValue,
-    useBreakpointValue,
-    useDisclosure,
 } from '@chakra-ui/react';
-import {
-    HamburgerIcon,
-    CloseIcon,
-    ChevronDownIcon,
-    ChevronRightIcon,
-} from '@chakra-ui/icons';
+import { ChevronRightIcon, } from '@chakra-ui/icons';
+import { Bucket } from 'src/@types';
+import { useApp } from 'src/context/AppContext';
+
+interface NavItem {
+    label: string;
+    icon?: React.ReactNode;
+    buckets?: Array<Bucket>;
+}
+
+
 
 export default function Header() {
-    const { isOpen, onToggle } = useDisclosure();
 
     return (
         <Box>
@@ -87,49 +87,49 @@ const DesktopNav = () => {
     const linkHoverColor = useColorModeValue('gray.800', 'white');
     const popoverContentBgColor = useColorModeValue('white', 'gray.800');
 
+    const { buckets } = useApp()
+
     return (
         <Stack direction={'row'} spacing={4}>
-            {NAV_ITEMS.map((navItem) => (
-                <Box key={navItem.label}>
-                    <Popover trigger={'hover'} placement={'bottom-start'} >
-                        <PopoverTrigger>
-                            <Link
-                                p={2}
-                                href={'#'}
-                                fontSize={'sm'}
-                                fontWeight={500}
-                                color={linkColor}
-                                _hover={{
-                                    textDecoration: 'none',
-                                    color: linkHoverColor,
-                                }}>
-                                {navItem.label}
-                            </Link>
-                        </PopoverTrigger>
+            <Box >
+                <Popover trigger={'hover'} placement={'bottom-start'} >
+                    <PopoverTrigger>
+                        <Link
+                            p={2}
+                            href={'#'}
+                            fontSize={'sm'}
+                            fontWeight={500}
+                            color={linkColor}
+                            _hover={{
+                                textDecoration: 'none',
+                                color: linkHoverColor,
+                            }}>
+                            Buckets
+                        </Link>
+                    </PopoverTrigger>
 
-                        {navItem.buckets && (
-                            <PopoverContent
-                                border={0}
-                                boxShadow={'xl'}
-                                bg={popoverContentBgColor}
-                                p={4}
-                                rounded={'xl'}
-                                w={200}
-                            >
-                                <Stack>
-                                    {navItem.buckets.map((bucket) => (
-                                        <DesktopSubNav key={bucket.name} {...bucket} />
-                                    ))}
-                                    <Button
-                                        colorScheme={'orange'}
-                                        size={'sm'} variant='outline' >Add New Bucket</Button>
-                                </Stack>
+                    {buckets && (
+                        <PopoverContent
+                            border={0}
+                            boxShadow={'xl'}
+                            bg={popoverContentBgColor}
+                            p={4}
+                            rounded={'xl'}
+                            w={200}
+                        >
+                            <Stack>
+                                {buckets.map((bucket) => (
+                                    <DesktopSubNav key={bucket.name} {...bucket} />
+                                ))}
+                                <Button
+                                    colorScheme={'orange'}
+                                    size={'sm'} variant='outline' >Add New Bucket</Button>
+                            </Stack>
 
-                            </PopoverContent>
-                        )}
-                    </Popover>
-                </Box>
-            ))}
+                        </PopoverContent>
+                    )}
+                </Popover>
+            </Box>
         </Stack>
     );
 };
@@ -170,32 +170,4 @@ const DesktopSubNav = ({ name, description, noOfItems }: Bucket) => {
 
 
 
-interface NavItem {
-    label: string;
-    icon?: React.ReactNode;
-    buckets?: Array<Bucket>;
-}
 
-interface Bucket {
-    name: string;
-    description?: string;
-    noOfItems?: number
-}
-
-const NAV_ITEMS: Array<NavItem> = [
-    {
-        label: 'Buckets',
-        buckets: [
-            {
-                name: 'Bucket 1',
-                description: 'First bucket',
-                noOfItems: 3
-            },
-            {
-                name: 'Bucket 2',
-                description: 'Second bucket',
-                noOfItems: 5
-            },
-        ],
-    },
-];
