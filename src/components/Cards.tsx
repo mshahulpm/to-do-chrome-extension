@@ -3,23 +3,26 @@ import {
     Center,
     Text,
     Stack,
-    List,
-    ListItem,
-    ListIcon,
-    Button,
     useColorModeValue,
+    Card,
+    Checkbox,
+    chakra,
 } from '@chakra-ui/react';
-import { CheckIcon } from '@chakra-ui/icons';
+import { DeleteIcon } from '@chakra-ui/icons';
 import { IconButton } from './CustomButtons';
 import { AiFillDelete } from 'react-icons/ai'
+import { MdEdit } from 'react-icons/md'
+
+type GroupTodoProps = {
+    no?: number
+}
+export default function GroupedTodoCard({ no = 1 }: GroupTodoProps) {
 
 
-export default function GroupedTodoCard() {
     return (
-        <Center m={2}>
+        <Box m={2} sx={{ display: 'inline-block', maxW: 220, float: 'left' }}>
             <Box
                 maxW={'330px'}
-                w={'full'}
                 bg={useColorModeValue('white', 'gray.800')}
                 boxShadow={'2xl'}
                 rounded={'md'}
@@ -42,40 +45,51 @@ export default function GroupedTodoCard() {
                     </IconButton>
                 </Stack>
 
-                <Box bg={useColorModeValue('gray.50', 'gray.900')} px={6} py={10}>
-                    <List spacing={3}>
-                        <ListItem>
-                            <ListIcon as={CheckIcon} color="green.400" />
-                            All features
-                        </ListItem>
-                    </List>
-
-                    <Button
-                        mt={10}
-                        w={'full'}
-                        bg={'green.400'}
-                        color={'white'}
-                        rounded={'xl'}
-                        boxShadow={'0 5px 20px 0px rgb(72 187 120 / 43%)'}
-                        _hover={{
-                            bg: 'green.500',
-                        }}
-                        _focus={{
-                            bg: 'green.500',
-                        }}>
-                        Start your trial
-                    </Button>
+                <Box bg={useColorModeValue('gray.50', 'gray.900')} p={3} >
+                    {
+                        new Array(no).fill(0).map((i, ind) => (
+                            <SingleTodo key={ind} />
+                        ))
+                    }
                 </Box>
             </Box>
-        </Center>
+        </Box>
     );
 }
+
+const CustomText = chakra(Text, {
+    baseStyle: {
+        py: 0,
+        my: 0
+    }
+})
 
 
 export function SingleTodo() {
 
 
+
     return (
-        <></>
+        <Card sx={{ my: 1 }}>
+            <Box sx={{ display: 'flex', maxW: 200 }}>
+                <Box sx={{ py: 2, pl: 4, minWidth: 150 }}>
+                    <CustomText fontWeight={700} fontSize={'xs'}>To do name</CustomText>
+                    <CustomText fontSize={'xs'}>Description about doing the stuff all over</CustomText>
+                    <CustomText sx={{
+                        border: '1px solid lightgray',
+                        display: 'inline-block',
+                        px: 2,
+                        borderRadius: 4
+
+                    }} fontSize={'xs'}>25 feb</CustomText>
+                </Box>
+                <Stack sx={{ p: 2 }}>
+                    <Checkbox />
+                    <DeleteIcon />
+                    <MdEdit />
+                </Stack>
+            </Box>
+
+        </Card >
     )
 }

@@ -57,7 +57,7 @@ export default function Header() {
                         textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
                         fontFamily={'heading'}
                         color={useColorModeValue('tomato', 'white')}>
-                        To Do App
+                        My Todo
                     </Text>
 
                     <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
@@ -108,11 +108,11 @@ const DesktopNav = () => {
         <Stack direction={'row'} spacing={4}>
             {NAV_ITEMS.map((navItem) => (
                 <Box key={navItem.label}>
-                    <Popover trigger={'hover'} placement={'bottom-start'}>
+                    <Popover trigger={'hover'} placement={'bottom-start'} >
                         <PopoverTrigger>
                             <Link
                                 p={2}
-                                href={navItem.href ?? '#'}
+                                href={'#'}
                                 fontSize={'sm'}
                                 fontWeight={500}
                                 color={linkColor}
@@ -124,19 +124,24 @@ const DesktopNav = () => {
                             </Link>
                         </PopoverTrigger>
 
-                        {navItem.children && (
+                        {navItem.buckets && (
                             <PopoverContent
                                 border={0}
                                 boxShadow={'xl'}
                                 bg={popoverContentBgColor}
                                 p={4}
                                 rounded={'xl'}
-                                minW={'sm'}>
+                                w={200}
+                            >
                                 <Stack>
-                                    {navItem.children.map((child) => (
-                                        <DesktopSubNav key={child.label} {...child} />
+                                    {navItem.buckets.map((bucket) => (
+                                        <DesktopSubNav key={bucket.name} {...bucket} />
                                     ))}
+                                    <Button
+                                        colorScheme={'orange'}
+                                        size={'sm'} variant='outline' >Add New Bucket</Button>
                                 </Stack>
+
                             </PopoverContent>
                         )}
                     </Popover>
@@ -146,10 +151,10 @@ const DesktopNav = () => {
     );
 };
 
-const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
+const DesktopSubNav = ({ name, description, noOfItems }: Bucket) => {
     return (
         <Link
-            href={href}
+            href={'#'}
             role={'group'}
             display={'block'}
             p={2}
@@ -161,9 +166,9 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
                         transition={'all .3s ease'}
                         _groupHover={{ color: 'pink.400' }}
                         fontWeight={500}>
-                        {label}
+                        {name} ({noOfItems})
                     </Text>
-                    <Text fontSize={'sm'}>{subLabel}</Text>
+                    <Text fontSize={'sm'}>{description}</Text>
                 </Box>
                 <Flex
                     transition={'all .3s ease'}
@@ -193,15 +198,15 @@ const MobileNav = () => {
     );
 };
 
-const MobileNavItem = ({ label, children, href }: NavItem) => {
+const MobileNavItem = ({ label, buckets }: NavItem) => {
     const { isOpen, onToggle } = useDisclosure();
 
     return (
-        <Stack spacing={4} onClick={children && onToggle}>
+        <Stack spacing={4} onClick={buckets && onToggle}>
             <Flex
                 py={2}
                 as={Link}
-                href={href ?? '#'}
+                href={'#'}
                 justify={'space-between'}
                 align={'center'}
                 _hover={{
@@ -212,7 +217,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
                     color={useColorModeValue('gray.600', 'gray.200')}>
                     {label}
                 </Text>
-                {children && (
+                {buckets && (
                     <Icon
                         as={ChevronDownIcon}
                         transition={'all .25s ease-in-out'}
@@ -231,10 +236,10 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
                     borderStyle={'solid'}
                     borderColor={useColorModeValue('gray.200', 'gray.700')}
                     align={'start'}>
-                    {children &&
-                        children.map((child) => (
-                            <Link key={child.label} py={2} href={child.href}>
-                                {child.label}
+                    {buckets &&
+                        buckets.map((bucket) => (
+                            <Link key={bucket.name} py={2} href={"#"}>
+                                {bucket.name} ({bucket.noOfItems})
                             </Link>
                         ))}
                 </Stack>
@@ -245,24 +250,29 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
 
 interface NavItem {
     label: string;
-    subLabel?: string;
-    children?: Array<NavItem>;
-    href?: string;
+    icon?: React.ReactNode;
+    buckets?: Array<Bucket>;
+}
+
+interface Bucket {
+    name: string;
+    description?: string;
+    noOfItems?: number
 }
 
 const NAV_ITEMS: Array<NavItem> = [
     {
-        label: 'Inspiration',
-        children: [
+        label: 'Buckets',
+        buckets: [
             {
-                label: 'Explore Design Work',
-                subLabel: 'Trending Design to inspire you',
-                href: '#',
+                name: 'Bucket 1',
+                description: 'First bucket',
+                noOfItems: 3
             },
             {
-                label: 'New & Noteworthy',
-                subLabel: 'Up-and-coming Designers',
-                href: '#',
+                name: 'Bucket 2',
+                description: 'Second bucket',
+                noOfItems: 5
             },
         ],
     },

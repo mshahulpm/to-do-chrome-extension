@@ -13,7 +13,7 @@ export const IconButton = ({
     href,
 }: {
     children: ReactNode;
-    label: string;
+    label?: string;
     href?: string;
 }) => {
     return (
