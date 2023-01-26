@@ -37,30 +37,17 @@ export default function Header() {
                 borderStyle={'solid'}
                 borderColor={useColorModeValue('gray.200', 'gray.900')}
                 align={'center'}>
-                <Flex
-                    flex={{ base: 1, md: 'auto' }}
-                    ml={{ base: -2 }}
-                    display={{ base: 'flex', md: 'none' }}>
-                    <IconButton
-                        onClick={onToggle}
-                        icon={
-                            isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
-                        }
-                        variant={'ghost'}
-                        aria-label={'Toggle Navigation'}
-                    />
-                </Flex>
-                <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
+                <Flex flex={{ base: 1 }} justify={{ base: 'start' }}>
                     <Text
                         fontWeight={700}
                         fontSize={20}
-                        textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
+                        textAlign={'left'}
                         fontFamily={'heading'}
                         color={useColorModeValue('tomato', 'white')}>
                         My Todo
                     </Text>
 
-                    <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
+                    <Flex display={{ base: 'flex' }} ml={10}>
                         <DesktopNav />
                     </Flex>
                 </Flex>
@@ -91,10 +78,6 @@ export default function Header() {
                     </Button>
                 </Stack>
             </Flex>
-
-            <Collapse in={isOpen} animateOpacity>
-                <MobileNav />
-            </Collapse>
         </Box>
     );
 }
@@ -185,68 +168,7 @@ const DesktopSubNav = ({ name, description, noOfItems }: Bucket) => {
     );
 };
 
-const MobileNav = () => {
-    return (
-        <Stack
-            bg={useColorModeValue('white', 'gray.800')}
-            p={4}
-            display={{ md: 'none' }}>
-            {NAV_ITEMS.map((navItem) => (
-                <MobileNavItem key={navItem.label} {...navItem} />
-            ))}
-        </Stack>
-    );
-};
 
-const MobileNavItem = ({ label, buckets }: NavItem) => {
-    const { isOpen, onToggle } = useDisclosure();
-
-    return (
-        <Stack spacing={4} onClick={buckets && onToggle}>
-            <Flex
-                py={2}
-                as={Link}
-                href={'#'}
-                justify={'space-between'}
-                align={'center'}
-                _hover={{
-                    textDecoration: 'none',
-                }}>
-                <Text
-                    fontWeight={600}
-                    color={useColorModeValue('gray.600', 'gray.200')}>
-                    {label}
-                </Text>
-                {buckets && (
-                    <Icon
-                        as={ChevronDownIcon}
-                        transition={'all .25s ease-in-out'}
-                        transform={isOpen ? 'rotate(180deg)' : ''}
-                        w={6}
-                        h={6}
-                    />
-                )}
-            </Flex>
-
-            <Collapse in={isOpen} animateOpacity style={{ marginTop: '0!important' }}>
-                <Stack
-                    mt={2}
-                    pl={4}
-                    borderLeft={1}
-                    borderStyle={'solid'}
-                    borderColor={useColorModeValue('gray.200', 'gray.700')}
-                    align={'start'}>
-                    {buckets &&
-                        buckets.map((bucket) => (
-                            <Link key={bucket.name} py={2} href={"#"}>
-                                {bucket.name} ({bucket.noOfItems})
-                            </Link>
-                        ))}
-                </Stack>
-            </Collapse>
-        </Stack>
-    );
-};
 
 interface NavItem {
     label: string;

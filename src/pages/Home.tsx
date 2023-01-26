@@ -11,7 +11,7 @@ export default function Home() {
                 minHeight: '80vh',
                 // display: 'flex',
                 flexWrap: 'wrap',
-                pb: 20,
+                pb: { base: 40, md: 20 },
                 alignItems: 'flex-start'
             }}
         >
