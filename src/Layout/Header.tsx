@@ -87,7 +87,7 @@ const DesktopNav = () => {
     const linkHoverColor = useColorModeValue('gray.800', 'white');
     const popoverContentBgColor = useColorModeValue('white', 'gray.800');
 
-    const { buckets } = useApp()
+    const { buckets, openModel } = useApp()
 
     return (
         <Stack direction={'row'} spacing={4}>
@@ -122,6 +122,7 @@ const DesktopNav = () => {
                                     <DesktopSubNav key={bucket.name} {...bucket} />
                                 ))}
                                 <Button
+                                    onClick={() => openModel('bucket')}
                                     colorScheme={'orange'}
                                     size={'sm'} variant='outline' >Add New Bucket</Button>
                             </Stack>

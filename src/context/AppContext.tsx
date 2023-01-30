@@ -3,12 +3,17 @@ import { Bucket, TodoItem } from 'src/@types'
 import { INITIAL_VALUES } from 'src/constants'
 import { useLocalStorage } from 'src/hooks/useLocalStorage'
 
+
+type modalType = 'bucket' | 'todo'
 export interface AppContextType extends AppStateType {
     addNewBucket: (name: string, description?: string) => any;
     removeBucket: (id: string) => any;
     addTodo: (bucketId: string, todo: TodoItem) => any;
     updateTodo: (bucketId: string, todo: TodoItem) => any;
     removeTodo: (bucketId: string, todoId: string) => any;
+    openModel: (type: modalType) => any
+    closeModal: () => any
+    selectBucket: (id: string) => any
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined)
@@ -19,12 +24,15 @@ interface AppProviderProps {
 
 interface AppStateType {
     buckets: Bucket[]
+    openedModal?: null | modalType
+    selectedBucket: string
 }
 
 export function AppProvider({ children }: AppProviderProps) {
 
-    const [appState, setState] = useLocalStorage<AppStateType>('', {
-        buckets: INITIAL_VALUES.buckets
+    const [appState, setState] = useLocalStorage<AppStateType>('my-todo', {
+        buckets: INITIAL_VALUES.buckets,
+        selectedBucket: INITIAL_VALUES.buckets[0].id
     })
 
     function addNewBucket(name: string, description?: string) {
@@ -92,6 +100,29 @@ export function AppProvider({ children }: AppProviderProps) {
         }))
     }
 
+    function openModel(modal: modalType) {
+
+        setState(prev => ({
+            ...prev,
+            openedModal: modal
+        }))
+
+    }
+
+    function closeModal() {
+        setState(prev => ({
+            ...prev,
+            openedModal: null
+        }))
+    }
+
+    function selectBucket(id: string) {
+        setState((prev => ({
+            ...prev,
+            selectedBucket: id
+        })))
+    }
+
     return (
         <AppContext.Provider
             value={{
@@ -101,6 +132,9 @@ export function AppProvider({ children }: AppProviderProps) {
                 addTodo,
                 updateTodo,
                 removeTodo,
+                openModel,
+                closeModal,
+                selectBucket
             }}
         >
             {children}
