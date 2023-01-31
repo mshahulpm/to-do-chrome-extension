@@ -10,6 +10,7 @@ export const INITIAL_VALUES: InitialValueType = {
         name: 'Home',
         description: 'Some random todo items...',
         noOfItems: 0,
-        todoLists: []
+        todoLists: [],
+        groupedTodoLists: []
     }]
 }

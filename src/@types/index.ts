@@ -4,7 +4,8 @@ export interface Bucket {
     name: string;
     description?: string;
     noOfItems: number;
-    todoLists: (TodoItem | GroupedTodoType)[]
+    todoLists: TodoItem[]
+    groupedTodoLists: GroupedTodoType[]
 }
 
 

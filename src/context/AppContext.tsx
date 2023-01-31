@@ -8,9 +8,9 @@ type modalType = 'bucket' | 'todo'
 export interface AppContextType extends AppStateType {
     addNewBucket: (name: string, description?: string) => any;
     removeBucket: (id: string) => any;
-    addTodo: (bucketId: string, todo: TodoItem) => any;
-    updateTodo: (bucketId: string, todo: TodoItem) => any;
-    removeTodo: (bucketId: string, todoId: string) => any;
+    addTodo: (bucketId: string, todo: TodoItem, groupId?: string) => any;
+    updateTodo: (bucketId: string, todo: TodoItem, groupId?: string) => any;
+    removeTodo: (bucketId: string, todoId: string, groupId?: string) => any;
     openModel: (type: modalType) => any
     closeModal: () => any
     selectBucket: (id: string) => any
@@ -25,14 +25,14 @@ interface AppProviderProps {
 interface AppStateType {
     buckets: Bucket[]
     openedModal?: null | modalType
-    selectedBucket: string
+    selectedBucket: Bucket
 }
 
 export function AppProvider({ children }: AppProviderProps) {
 
     const [appState, setState] = useLocalStorage<AppStateType>('my-todo', {
         buckets: INITIAL_VALUES.buckets,
-        selectedBucket: INITIAL_VALUES.buckets[0].id
+        selectedBucket: INITIAL_VALUES.buckets[0]
     })
 
     function addNewBucket(name: string, description?: string) {
@@ -40,7 +40,7 @@ export function AppProvider({ children }: AppProviderProps) {
             ...prev,
             buckets: [
                 ...prev.buckets,
-                { id: Date.now() + '', name, description, noOfItems: 0, todoLists: [] }
+                { id: Date.now() + '', name, description, noOfItems: 0, todoLists: [], groupedTodoLists: [] }
             ]
         }))
     }
@@ -52,11 +52,21 @@ export function AppProvider({ children }: AppProviderProps) {
         }))
     }
 
-    function addTodo(bucketId: string, todo: TodoItem) {
+    function addTodo(bucketId: string, todo: TodoItem, groupId?: string) {
         setState(prev => ({
             ...prev,
             buckets: prev.buckets.map(bucket => {
                 if (bucket.id === bucketId) {
+                    if (groupId) {
+                        bucket.groupedTodoLists = bucket.groupedTodoLists.map(gp_list => {
+                            if (gp_list.id === groupId) {
+                                gp_list.items.push(todo)
+                                return gp_list
+                            }
+                            return gp_list
+                        })
+                        return bucket
+                    }
                     bucket.todoLists.push(todo)
                     return bucket
                 }
@@ -65,11 +75,21 @@ export function AppProvider({ children }: AppProviderProps) {
         }))
     }
 
-    function removeTodo(bucketId: string, todoId: string) {
+    function removeTodo(bucketId: string, todoId: string, groupId?: string) {
         setState(prev => ({
             ...prev,
             buckets: prev.buckets.map(bucket => {
                 if (bucket.id === bucketId) {
+                    if (groupId) {
+                        bucket.groupedTodoLists = bucket.groupedTodoLists.map(gp_list => {
+                            if (gp_list.id === groupId) {
+                                gp_list.items = gp_list.items.filter(it => it.id !== todoId)
+                                return gp_list
+                            }
+                            return gp_list
+                        })
+                        return bucket
+                    }
                     return {
                         ...bucket,
                         todoLists: bucket.todoLists.filter(item => item.id !== todoId)
@@ -80,11 +100,23 @@ export function AppProvider({ children }: AppProviderProps) {
         }))
     }
 
-    function updateTodo(bucketId: string, todo: TodoItem) {
+    function updateTodo(bucketId: string, todo: TodoItem, groupId?: string) {
         setState(prev => ({
             ...prev,
             buckets: prev.buckets.map(bucket => {
                 if (bucket.id === bucketId) {
+
+                    if (groupId) {
+                        bucket.groupedTodoLists = bucket.groupedTodoLists.map(gp_list => {
+                            gp_list.items = gp_list.items.map(it => {
+                                if (it.id === todo.id) return todo
+                                return it
+                            })
+                            return gp_list
+                        })
+                        return bucket
+                    }
+
                     return {
                         ...bucket,
                         todoLists: bucket.todoLists.map(item => {
@@ -119,7 +151,7 @@ export function AppProvider({ children }: AppProviderProps) {
     function selectBucket(id: string) {
         setState((prev => ({
             ...prev,
-            selectedBucket: id
+            selectedBucket: prev.buckets.find(buck => buck.id === id)!
         })))
     }
 
