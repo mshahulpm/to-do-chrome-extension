@@ -3,7 +3,6 @@ import {
     Flex,
     FormControl,
     FormLabel,
-    Input,
     Modal,
     ModalBody,
     ModalContent,
@@ -12,36 +11,21 @@ import {
     Switch,
 } from "@chakra-ui/react";
 import { useState } from 'react'
-import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useFieldArray, useForm } from 'react-hook-form'
+import GroupTodo from "./GroupTodo";
+import SingleTodoForm from "./SingleTodo";
 
-const todoSchema = yup.object().shape({
-    title: yup.string().required('Name required').min(5).max(15),
-    description: yup.string().max(20),
-    dueDate: yup.date().typeError('invalid date'),
-    completed: yup.boolean().default(false)
-})
 
-const groupTodo = yup.object().shape({
-    heading: yup.string().required('Name required').min(5).max(15),
-    items: yup.array().of(todoSchema)
-})
 
-export default function AddTodo() {
+type props = {
+    onClose: () => any
+}
+
+export default function AddTodo({ onClose }: props) {
 
     const [single, setSingle] = useState(false)
 
-    const methods = useForm({
-        resolver: yupResolver(single ? todoSchema : groupTodo)
-    })
-
-    function onSubmit(data: any) {
-        console.log(data)
-    }
-
     return (
-        <Modal size={'sm'} isOpen={true} onClose={() => { }}>
+        <Modal size={'sm'} isOpen={true} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
                 <Flex sx={{ justifyContent: 'space-between' }}>
@@ -62,9 +46,11 @@ export default function AddTodo() {
                     </Box>
                 </Flex>
                 <ModalBody>
-                    <form onSubmit={methods.handleSubmit(onSubmit)}>
-
-                    </form>
+                    {
+                        single ?
+                            <SingleTodoForm onClose={onClose} /> :
+                            <GroupTodo onClose={onClose} />
+                    }
                 </ModalBody>
             </ModalContent>
         </Modal>
@@ -74,13 +60,3 @@ export default function AddTodo() {
 
 
 
-function SingleTodoForm() {
-
-
-
-    return (
-        <>
-            <Input />
-        </>
-    )
-}
