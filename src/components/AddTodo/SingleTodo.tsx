@@ -3,6 +3,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import RHFInput from "../hook-form/RHFInput";
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
+import { useApp } from "src/context/AppContext";
 
 
 
@@ -26,12 +27,15 @@ type props = {
 
 export default function SingleTodoForm({ onClose }: props) {
 
+    const { selectedBucket, addTodo } = useApp()
+
     const methods = useForm({
         resolver: yupResolver(todoSchema)
     })
 
     function onSubmit(data: any) {
-        console.log(data)
+        addTodo(selectedBucket.id, data)
+        onClose()
     }
 
 

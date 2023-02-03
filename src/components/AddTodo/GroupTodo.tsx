@@ -2,6 +2,7 @@ import { DeleteIcon } from '@chakra-ui/icons'
 import { Box, Button, Card, Center, chakra, Flex, IconButton, Text } from '@chakra-ui/react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
+import { useApp } from 'src/context/AppContext'
 import * as yup from 'yup'
 import RHFInput from '../hook-form/RHFInput'
 import { todoSchema } from './SingleTodo'
@@ -28,12 +29,15 @@ type props = {
 
 export default function GroupTodo({ onClose }: props) {
 
+    const { addGroupTodo, selectedBucket } = useApp()
+
     const methods = useForm({
         resolver: yupResolver(groupTodo)
     })
 
     function onSubmit(data: any) {
-        console.log(data)
+        addGroupTodo(selectedBucket.id, data)
+        onClose()
     }
 
     const { fields, append, remove } = useFieldArray({

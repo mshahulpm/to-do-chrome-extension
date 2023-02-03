@@ -32,7 +32,6 @@ export default function NewBucket() {
                                 <Input
                                     {...register('name', {
                                         required: { value: true, message: 'Required' },
-                                        minLength: { value: 5, message: 'Minimum 5 character required' },
                                         maxLength: { value: 15, message: 'Maximum limit 15' }
                                     })}
                                     placeholder="Bucket Name" />

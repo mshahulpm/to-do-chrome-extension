@@ -12,12 +12,15 @@ import { DeleteIcon } from '@chakra-ui/icons';
 import { IconButton } from './CustomButtons';
 import { AiFillDelete } from 'react-icons/ai'
 import { MdEdit } from 'react-icons/md'
+import { GroupedTodoType, TodoItem } from 'src/@types';
+import { useApp } from 'src/context/AppContext';
 
 type GroupTodoProps = {
-    no?: number
+    todoItem: GroupedTodoType
 }
-export default function GroupedTodoCard({ no = 1 }: GroupTodoProps) {
+export default function GroupedTodoCard({ todoItem }: GroupTodoProps) {
 
+    const { removeGroupTodo, selectedBucket } = useApp()
 
     return (
         <Box m={2} sx={{ display: 'inline-block', maxW: 220, float: 'left' }}>
@@ -38,17 +41,19 @@ export default function GroupedTodoCard({ no = 1 }: GroupTodoProps) {
                         color={'grey.500'}
                         mr={'auto'}
                         rounded={'base'}>
-                        Hobby
+                        {todoItem.heading}
                     </Text>
                     <IconButton label='Delete' >
-                        <AiFillDelete style={{ color: 'tomato' }} />
+                        <AiFillDelete
+                            onClick={() => removeGroupTodo(selectedBucket.id, todoItem.id)}
+                            style={{ color: 'tomato' }} />
                     </IconButton>
                 </Stack>
 
                 <Box bg={useColorModeValue('gray.50', 'gray.900')} p={3} >
                     {
-                        new Array(no).fill(0).map((i, ind) => (
-                            <SingleTodo key={ind} />
+                        todoItem.items.map(item => (
+                            <SingleTodo key={item.id} item={item} />
                         ))
                     }
                 </Box>
@@ -65,27 +70,36 @@ const CustomText = chakra(Text, {
 })
 
 
-export function SingleTodo() {
+type SingleTodoProps = {
+    item: TodoItem,
+    group_id?: string
+}
+export function SingleTodo({ item, group_id }: SingleTodoProps) {
 
+    const { removeTodo, selectedBucket } = useApp()
 
 
     return (
         <Card sx={{ my: 1 }}>
             <Box sx={{ display: 'flex', maxW: 200 }}>
                 <Box sx={{ py: 2, pl: 4, minWidth: 150 }}>
-                    <CustomText fontWeight={700} fontSize={'xs'}>To do name</CustomText>
-                    <CustomText fontSize={'xs'}>Description about doing the stuff all over</CustomText>
+                    <CustomText fontWeight={700} fontSize={'xs'}>{item.title}</CustomText>
+                    <CustomText fontSize={'xs'}>
+                        {item.description}
+                    </CustomText>
                     <CustomText sx={{
                         border: '1px solid lightgray',
                         display: 'inline-block',
                         px: 2,
                         borderRadius: 4
 
-                    }} fontSize={'xs'}>25 feb</CustomText>
+                    }} fontSize={'xs'}>
+                        {new Date(item.dueDate!).toLocaleDateString()}
+                    </CustomText>
                 </Box>
                 <Stack sx={{ p: 2 }}>
                     <Checkbox />
-                    <DeleteIcon />
+                    <DeleteIcon onClick={() => removeTodo(selectedBucket.id, item.id, group_id)} />
                     <MdEdit />
                 </Stack>
             </Box>

@@ -1,5 +1,5 @@
 import { createContext, useContext, ReactNode } from 'react'
-import { Bucket, TodoItem } from 'src/@types'
+import { Bucket, GroupedTodoType, TodoItem } from 'src/@types'
 import { INITIAL_VALUES } from 'src/constants'
 import { useLocalStorage } from 'src/hooks/useLocalStorage'
 
@@ -14,6 +14,9 @@ export interface AppContextType extends AppStateType {
     openModel: (type: modalType) => any
     closeModal: () => any
     selectBucket: (id: string) => any
+    addGroupTodo: (bucketId: string, todo: GroupedTodoType) => any
+    removeGroupTodo: (bucketId: string, groupId: string) => any
+
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined)
@@ -46,9 +49,11 @@ export function AppProvider({ children }: AppProviderProps) {
     }
 
     function removeBucket(id: string) {
+        if (id === '123') return
         setState(prev => ({
             ...prev,
-            buckets: prev.buckets.filter(bucket => bucket.id != id)
+            buckets: prev.buckets.filter(bucket => bucket.id != id),
+            selectedBucket: prev.buckets[0]
         }))
     }
 
@@ -74,6 +79,34 @@ export function AppProvider({ children }: AppProviderProps) {
             })
         }))
     }
+
+    function addGroupTodo(bucketId: string, todo: GroupedTodoType) {
+        setState(prev => ({
+            ...prev,
+            buckets: prev.buckets.map(buck => {
+                if (buck.id === bucketId) {
+                    buck.groupedTodoLists.push(todo)
+                }
+                return buck
+            })
+        }))
+    }
+
+    function removeGroupTodo(bucketId: string, groupId: string) {
+        setState(prev => ({
+            ...prev,
+            buckets: prev.buckets.map(buck => {
+                if (buck.id === bucketId) {
+                    return {
+                        ...buck,
+                        groupedTodoLists: buck.groupedTodoLists.filter(gp_list => gp_list.id !== groupId)
+                    }
+                }
+                return buck
+            })
+        }))
+    }
+
 
     function removeTodo(bucketId: string, todoId: string, groupId?: string) {
         setState(prev => ({
@@ -166,7 +199,9 @@ export function AppProvider({ children }: AppProviderProps) {
                 removeTodo,
                 openModel,
                 closeModal,
-                selectBucket
+                selectBucket,
+                addGroupTodo,
+                removeGroupTodo
             }}
         >
             {children}
