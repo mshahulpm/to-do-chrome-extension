@@ -36,6 +36,7 @@ export default function GroupTodo({ onClose }: props) {
     })
 
     function onSubmit(data: any) {
+        data.id = Date.now() + ''
         addGroupTodo(selectedBucket.id, data)
         onClose()
     }

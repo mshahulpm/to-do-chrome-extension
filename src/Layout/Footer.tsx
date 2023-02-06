@@ -5,7 +5,7 @@ import {
     Text,
     useColorModeValue,
 } from '@chakra-ui/react';
-import { FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
+import { FaInstagram, FaLinkedin, FaGithub } from 'react-icons/fa';
 import { IconButton } from 'src/components/CustomButtons';
 
 
@@ -30,15 +30,21 @@ export default function Footer() {
                 justify={{ base: 'center', md: 'space-between' }}
                 align={{ base: 'center', md: 'center' }}>
                 <Text>© {new Date().getFullYear()} All rights reserved</Text>
-                <Text>Made with ❤️ by Mohammed Shahul</Text>
                 <Stack direction={'row'} spacing={6}>
-                    <IconButton label={'Twitter'} href={'#'}>
-                        <FaTwitter />
+                    <Text>Made with ❤️ by
+                        <a
+                            style={{ marginLeft: '5px', textDecoration: 'underline' }}
+                            href='https://mshahulpm.github.io/' target={'_blank'}>
+                            Mohammed Shahul
+                        </a>
+                    </Text>
+                    <IconButton label={'Github'} href={'https://github.com/mshahulpm'}>
+                        <FaGithub />
                     </IconButton>
-                    <IconButton label={'YouTube'} href={'#'}>
-                        <FaYoutube />
+                    <IconButton label={'LinkedIn'} href={'https://linkedin.com/in/mshhaulpm/'}>
+                        <FaLinkedin />
                     </IconButton>
-                    <IconButton label={'Instagram'} href={'#'}>
+                    <IconButton label={'Instagram'} href={'https://instagram.com/shahul__pm/'}>
                         <FaInstagram />
                     </IconButton>
                 </Stack>

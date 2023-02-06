@@ -16,6 +16,7 @@ export interface AppContextType extends AppStateType {
     selectBucket: (id: string) => any
     addGroupTodo: (bucketId: string, todo: GroupedTodoType) => any
     removeGroupTodo: (bucketId: string, groupId: string) => any
+    selectedBucket: Bucket
 
 }
 
@@ -28,15 +29,20 @@ interface AppProviderProps {
 interface AppStateType {
     buckets: Bucket[]
     openedModal?: null | modalType
-    selectedBucket: Bucket
+    selectedBucketId: string
 }
 
 export function AppProvider({ children }: AppProviderProps) {
 
     const [appState, setState] = useLocalStorage<AppStateType>('my-todo', {
         buckets: INITIAL_VALUES.buckets,
-        selectedBucket: INITIAL_VALUES.buckets[0]
+        selectedBucketId: INITIAL_VALUES.buckets[0].id
     })
+
+    /**
+     *   Selected Bucket 
+     */
+    const selectedBucket = appState.buckets.find(buck => buck.id === appState.selectedBucketId)!
 
     function addNewBucket(name: string, description?: string) {
         setState(prev => ({
@@ -53,7 +59,7 @@ export function AppProvider({ children }: AppProviderProps) {
         setState(prev => ({
             ...prev,
             buckets: prev.buckets.filter(bucket => bucket.id != id),
-            selectedBucket: prev.buckets[0]
+            selectedBucketId: prev.buckets[0].id
         }))
     }
 
@@ -184,7 +190,7 @@ export function AppProvider({ children }: AppProviderProps) {
     function selectBucket(id: string) {
         setState((prev => ({
             ...prev,
-            selectedBucket: prev.buckets.find(buck => buck.id === id)!
+            selectedBucketId: prev.buckets.find(buck => buck.id === id)?.id!
         })))
     }
 
@@ -201,7 +207,8 @@ export function AppProvider({ children }: AppProviderProps) {
                 closeModal,
                 selectBucket,
                 addGroupTodo,
-                removeGroupTodo
+                removeGroupTodo,
+                selectedBucket
             }}
         >
             {children}

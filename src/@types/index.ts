@@ -10,6 +10,7 @@ export interface Bucket {
 
 
 export interface TodoItem {
+    bucket_id?: string
     id: string;
     title: string;
     description?: string;
@@ -18,6 +19,7 @@ export interface TodoItem {
 }
 
 export interface GroupedTodoType {
+    bucket_id: string
     id: string
     heading: string
     items: TodoItem[]

@@ -34,6 +34,7 @@ export default function SingleTodoForm({ onClose }: props) {
     })
 
     function onSubmit(data: any) {
+        data.id = Date.now() + ''
         addTodo(selectedBucket.id, data)
         onClose()
     }

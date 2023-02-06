@@ -5,7 +5,7 @@
     "version": "1",
     "author": "Mohammed Shahul",
     "action": {
-        "default_icon": "vite.svg",
+        "default_icon": "icons/favicon-16x16.png",
         "default_title": "Have a good day",
         "default_popup": "index.html"
     },

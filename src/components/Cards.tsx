@@ -7,8 +7,9 @@ import {
     Card,
     Checkbox,
     chakra,
+    Flex,
 } from '@chakra-ui/react';
-import { DeleteIcon } from '@chakra-ui/icons';
+import { DeleteIcon, TimeIcon } from '@chakra-ui/icons';
 import { IconButton } from './CustomButtons';
 import { AiFillDelete } from 'react-icons/ai'
 import { MdEdit } from 'react-icons/md'
@@ -23,7 +24,7 @@ export default function GroupedTodoCard({ todoItem }: GroupTodoProps) {
     const { removeGroupTodo, selectedBucket } = useApp()
 
     return (
-        <Box m={2} sx={{ display: 'inline-block', maxW: 220, float: 'left' }}>
+        <Box m={2} sx={{ display: 'inline-block', w: 220, float: 'left' }}>
             <Box
                 maxW={'330px'}
                 bg={useColorModeValue('white', 'gray.800')}
@@ -52,8 +53,8 @@ export default function GroupedTodoCard({ todoItem }: GroupTodoProps) {
 
                 <Box bg={useColorModeValue('gray.50', 'gray.900')} p={3} >
                     {
-                        todoItem.items.map(item => (
-                            <SingleTodo key={item.id} item={item} />
+                        todoItem.items.map((item, i) => (
+                            <SingleTodo key={i} item={item} />
                         ))
                     }
                 </Box>
@@ -87,15 +88,23 @@ export function SingleTodo({ item, group_id }: SingleTodoProps) {
                     <CustomText fontSize={'xs'}>
                         {item.description}
                     </CustomText>
-                    <CustomText sx={{
-                        border: '1px solid lightgray',
-                        display: 'inline-block',
-                        px: 2,
-                        borderRadius: 4
+                    <Flex sx={{ my: 2 }}>
+                        <TimeIcon sx={{ mr: 1, color: 'orange' }} />
+                        {
+                            item.dueDate ?
+                                <CustomText sx={{
+                                    border: '1px solid lightgray',
+                                    display: 'inline-block',
+                                    px: 2,
+                                    borderRadius: 4
 
-                    }} fontSize={'xs'}>
-                        {new Date(item.dueDate!).toLocaleDateString()}
-                    </CustomText>
+                                }} fontSize={'xs'}>
+                                    {new Date(item.dueDate!).toLocaleDateString()}
+                                </CustomText>
+                                : <CustomText sx={{ mb: 2 }}>--</CustomText>
+                        }
+                    </Flex>
+
                 </Box>
                 <Stack sx={{ p: 2 }}>
                     <Checkbox />

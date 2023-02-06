@@ -1,4 +1,4 @@
-import { Center } from '@chakra-ui/react'
+import { Box, Center } from '@chakra-ui/react'
 import GroupedTodoCard, { SingleTodo } from 'src/components/Cards'
 import NewBucket from 'src/components/NewBucket'
 import { useApp } from 'src/context/AppContext'
@@ -9,6 +9,8 @@ import HomeHeader from './HomeHeader'
 export default function Home() {
 
     const { groupedTodoLists, todoLists } = useApp().selectedBucket
+    const rev_groupedTodoLists = [...groupedTodoLists].reverse()
+    const rev_todoLists = [...todoLists].reverse()
 
     return (
         <>
@@ -27,14 +29,16 @@ export default function Home() {
             >
 
                 {
-                    groupedTodoLists.map((tList, i) => (
-                        <GroupedTodoCard todoItem={tList} key={i} />
+                    rev_groupedTodoLists.map((tList, i) => (
+                        <GroupedTodoCard todoItem={tList} key={tList.id} />
                     ))
                 }
 
                 {
-                    todoLists.map((lst, i) => (
-                        <SingleTodo key={i} item={lst} />
+                    rev_todoLists.map((lst, i) => (
+                        <Box key={lst.id} sx={{ m: 2 }}>
+                            <SingleTodo item={lst} />
+                        </Box>
                     ))
                 }
 
