@@ -1,6 +1,7 @@
-import { Box, Center } from '@chakra-ui/react'
+import { Box, Center, Text, useColorModeValue } from '@chakra-ui/react'
 import GroupedTodoCard, { SingleTodo } from 'src/components/Cards'
 import NewBucket from 'src/components/NewBucket'
+import ConfirmBox from 'src/components/UI/ConfirmBox'
 import { useApp } from 'src/context/AppContext'
 import HomeHeader from './HomeHeader'
 
@@ -12,17 +13,18 @@ export default function Home() {
     const rev_groupedTodoLists = [...groupedTodoLists].reverse()
     const rev_todoLists = [...todoLists].reverse()
 
+    const isTodosEmpty = !(rev_groupedTodoLists.length || rev_todoLists.length)
+
     return (
         <>
             <NewBucket />
 
-            <HomeHeader />
-
             <Center
                 sx={{
-                    minHeight: '80vh',
+                    minHeight: '90vh',
                     // display: 'flex',
                     flexWrap: 'wrap',
+                    pt: 10,
                     pb: { base: 40, md: 20 },
                     alignItems: 'flex-start'
                 }}
@@ -40,6 +42,18 @@ export default function Home() {
                             <SingleTodo item={lst} />
                         </Box>
                     ))
+                }
+
+                {
+                    isTodosEmpty &&
+                    <Box
+                        bg={useColorModeValue('grey.50', 'grey.900')}
+                        sx={{ p: 10, mt: 20 }}
+                        boxShadow={'md'}
+                        rounded='md'
+                    >
+                        <Text color={'gray'}> Add some tasks ...</Text>
+                    </Box>
                 }
 
             </Center>

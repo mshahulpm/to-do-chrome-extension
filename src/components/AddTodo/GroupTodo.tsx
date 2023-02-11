@@ -80,7 +80,7 @@ export default function GroupTodo({ onClose }: props) {
 
                         <Center sx={{ mt: 4 }} >
                             <Button
-                                onClick={() => append({})}
+                                onClick={() => append({ id: Date.now() + '' })}
                                 size={'xs'} colorScheme='red' variant={'outline'} >+ Add todo</Button>
                         </Center>
                     </>

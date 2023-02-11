@@ -148,7 +148,9 @@ export function AppProvider({ children }: AppProviderProps) {
                     if (groupId) {
                         bucket.groupedTodoLists = bucket.groupedTodoLists.map(gp_list => {
                             gp_list.items = gp_list.items.map(it => {
-                                if (it.id === todo.id) return todo
+                                if (it.id === todo.id) {
+                                    return todo
+                                }
                                 return it
                             })
                             return gp_list

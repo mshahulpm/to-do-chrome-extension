@@ -28,7 +28,7 @@ export default function GroupedTodoCard({ todoItem }: GroupTodoProps) {
             <Box
                 maxW={'330px'}
                 bg={useColorModeValue('white', 'gray.800')}
-                boxShadow={'2xl'}
+                boxShadow={'md'}
                 rounded={'md'}
                 overflow={'hidden'}>
 
@@ -44,17 +44,20 @@ export default function GroupedTodoCard({ todoItem }: GroupTodoProps) {
                         rounded={'base'}>
                         {todoItem.heading}
                     </Text>
-                    <IconButton label='Delete' >
-                        <AiFillDelete
-                            onClick={() => removeGroupTodo(selectedBucket.id, todoItem.id)}
-                            style={{ color: 'tomato' }} />
-                    </IconButton>
+                    <span
+                        onClick={() => removeGroupTodo(selectedBucket.id, todoItem.id)}
+                    >
+                        <IconButton label='Delete' >
+                            <AiFillDelete
+                                style={{ color: 'tomato' }} />
+                        </IconButton>
+                    </span>
                 </Stack>
 
                 <Box bg={useColorModeValue('gray.50', 'gray.900')} p={3} >
                     {
                         todoItem.items.map((item, i) => (
-                            <SingleTodo key={i} item={item} />
+                            <SingleTodo key={i} item={item} group_id={todoItem.id} />
                         ))
                     }
                 </Box>
@@ -77,39 +80,63 @@ type SingleTodoProps = {
 }
 export function SingleTodo({ item, group_id }: SingleTodoProps) {
 
-    const { removeTodo, selectedBucket } = useApp()
+    const { removeTodo, selectedBucket, updateTodo } = useApp()
 
+    function handleCheck(checked: boolean) {
+
+        updateTodo(selectedBucket.id, { ...item, completed: checked }, group_id)
+    }
 
     return (
-        <Card sx={{ my: 1 }}>
-            <Box sx={{ display: 'flex', maxW: 200 }}>
-                <Box sx={{ py: 2, pl: 4, minWidth: 150 }}>
-                    <CustomText fontWeight={700} fontSize={'xs'}>{item.title}</CustomText>
-                    <CustomText fontSize={'xs'}>
+        <Card sx={{
+            my: 1,
+            background: item.completed ? '#faebcf' : 'none'
+        }}>
+            <Box sx={{
+                display: 'flex', maxW: 200,
+            }}>
+                <Box sx={{ pt: 2, pl: 4, minWidth: 150 }}>
+                    <CustomText
+                        sx={{
+                            textDecoration: item.completed ? 'line-through' : 'none'
+                        }}
+                        fontWeight={700} fontSize={'xs'}>{item.title}</CustomText>
+                    <CustomText
+                        sx={{
+                            textDecoration: item.completed ? 'line-through' : 'none'
+                        }}
+                        fontSize={'xs'}>
                         {item.description}
                     </CustomText>
-                    <Flex sx={{ my: 2 }}>
+                    <Flex sx={{ mt: 2 }}>
                         <TimeIcon sx={{ mr: 1, color: 'orange' }} />
-                        {
-                            item.dueDate ?
-                                <CustomText sx={{
-                                    border: '1px solid lightgray',
-                                    display: 'inline-block',
-                                    px: 2,
-                                    borderRadius: 4
 
-                                }} fontSize={'xs'}>
-                                    {new Date(item.dueDate!).toLocaleDateString()}
-                                </CustomText>
-                                : <CustomText sx={{ mb: 2 }}>--</CustomText>
-                        }
+                        <CustomText sx={{
+                            border: '1px solid lightgray',
+                            display: 'inline-block',
+                            px: 2,
+                            borderRadius: 4,
+                            mb: 1
+
+                        }} fontSize={'xs'}>
+                            {
+                                item.dueDate ?
+                                    new Date(item.dueDate!).toDateString().slice(4, 10)
+                                    : '--'
+                            }
+                        </CustomText>
+
                     </Flex>
 
                 </Box>
-                <Stack sx={{ p: 2 }}>
-                    <Checkbox />
-                    <DeleteIcon onClick={() => removeTodo(selectedBucket.id, item.id, group_id)} />
-                    <MdEdit />
+                <Stack sx={{ p: 2, pb: 0 }}>
+                    <Checkbox
+                        isChecked={item.completed} onChange={e => handleCheck(e.target.checked)}
+                    />
+                    <DeleteIcon
+                        sx={{ cursor: 'pointer' }}
+                        onClick={() => removeTodo(selectedBucket.id, item.id, group_id)} />
+                    {/* <MdEdit /> */}
                 </Stack>
             </Box>
 

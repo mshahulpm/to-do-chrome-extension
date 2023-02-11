@@ -10,10 +10,15 @@ import {
     PopoverTrigger,
     PopoverContent,
     useColorModeValue,
+    IconButton,
+    Tooltip,
 } from '@chakra-ui/react';
-import { ChevronRightIcon, } from '@chakra-ui/icons';
+import { ChevronRightIcon, DeleteIcon, } from '@chakra-ui/icons';
 import { Bucket } from 'src/@types';
 import { useApp } from 'src/context/AppContext';
+import AddTodo from 'src/components/AddTodo';
+import { useState } from 'react';
+import { BsBucket } from 'react-icons/bs'
 
 interface NavItem {
     label: string;
@@ -25,8 +30,12 @@ interface NavItem {
 
 export default function Header() {
 
+    const [todoModal, setTodoModal] = useState(false)
+    const { removeBucket, selectedBucketId } = useApp()
+
     return (
         <Box>
+            {todoModal && <AddTodo onClose={() => setTodoModal(false)} />}
             <Flex
                 bg={useColorModeValue('white', 'gray.800')}
                 color={useColorModeValue('gray.600', 'white')}
@@ -57,25 +66,21 @@ export default function Header() {
                     justify={'flex-end'}
                     direction={'row'}
                     spacing={6}>
+
+                    {
+                        selectedBucketId !== '123' &&
+                        <IconButton
+                            onClick={() => removeBucket(selectedBucketId)}
+                            sx={{ ml: 4, borderRadius: '50%', fontSize: 15 }} aria-label='button'>
+                            <Tooltip label='Delete Bucket' colorScheme={'red'}>
+                                <DeleteIcon color={'tomato'} />
+                            </Tooltip>
+                        </IconButton>
+                    }
+
                     <Button
-                        as={'a'}
-                        fontSize={'sm'}
-                        fontWeight={400}
-                        variant={'link'}
-                        href={'#'}>
-                        Sign In
-                    </Button>
-                    <Button
-                        display={{ base: 'none', md: 'inline-flex' }}
-                        fontSize={'sm'}
-                        fontWeight={600}
-                        color={'white'}
-                        bg={'pink.400'}
-                        _hover={{
-                            bg: 'pink.300',
-                        }}>
-                        Sign Up
-                    </Button>
+                        onClick={() => setTodoModal(true)}
+                        size={'sm'} variant={'outline'} colorScheme='red'>+ Add Todo</Button>
                 </Stack>
             </Flex>
         </Box>
@@ -87,7 +92,8 @@ const DesktopNav = () => {
     const linkHoverColor = useColorModeValue('gray.800', 'white');
     const popoverContentBgColor = useColorModeValue('white', 'gray.800');
 
-    const { buckets, openModel, selectBucket } = useApp()
+    const { buckets, openModel, removeBucket, selectedBucket } = useApp()
+    const noOfItems = selectedBucket.todoLists.length + selectedBucket.groupedTodoLists.length
 
     return (
         <Stack direction={'row'} spacing={4}>
@@ -104,7 +110,10 @@ const DesktopNav = () => {
                                 textDecoration: 'none',
                                 color: linkHoverColor,
                             }}>
-                            Buckets
+                            <BsBucket style={{ display: 'inline', color: 'tomato', fontSize: 20 }} />
+                            {' '} {selectedBucket.name} {' '} ({noOfItems})
+
+
                         </Link>
                     </PopoverTrigger>
 
@@ -121,6 +130,7 @@ const DesktopNav = () => {
                                 {buckets.map((bucket) => (
                                     <DesktopSubNav key={bucket.name} {...bucket} />
                                 ))}
+
                                 <Button
                                     onClick={() => openModel('bucket')}
                                     colorScheme={'orange'}

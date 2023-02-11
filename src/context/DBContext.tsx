@@ -16,7 +16,7 @@ type props = {
 }
 export function DBProvider({ children }: props) {
 
-    const [todoTable, setTodo] = useLocalStorage<TodoItem[]>('todo-table', [])
+    const [todoTable, setTodoTable] = useLocalStorage<TodoItem[]>('todo-table', [])
     const [groupTodoTable, setGroupTodoTable] = useLocalStorage<GroupedTodoType[]>('group-todo-table', [])
 
 
@@ -24,10 +24,21 @@ export function DBProvider({ children }: props) {
         const ungrouped_todo = todoTable.filter(todo => todo.bucket_id === bucket_id)
         const grouped_todo = groupTodoTable.filter(todo => todo.bucket_id === bucket_id)
         return {
-            groupTodoTable,
+            grouped_todo,
             ungrouped_todo
         }
     }
+
+    function addUngroupedTodo(todo: TodoItem) {
+        setTodoTable(prev => ([...prev, todo]))
+    }
+
+    function removeUnGroupedTodo(todo_id: string) {
+        setTodoTable(prev => {
+            return prev.filter(todo => todo.id !== todo_id)
+        })
+    }
+
 
 
     return (

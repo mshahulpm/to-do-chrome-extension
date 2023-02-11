@@ -10,12 +10,10 @@ import { DeleteIcon } from '@chakra-ui/icons'
 export default function HomeHeader() {
 
     const { selectedBucket, removeBucket } = useApp()
-    const [todoModal, setTodoModal] = useState(false)
     const noOfItems = selectedBucket.todoLists.length + selectedBucket.groupedTodoLists.length
 
     return (
         <>
-            {todoModal && <AddTodo onClose={() => setTodoModal(false)} />}
 
             <Box sx={{ p: 3, px: 10, display: 'flex', justifyContent: 'space-between' }}>
                 <Flex>
@@ -33,9 +31,7 @@ export default function HomeHeader() {
                         </IconButton>
                     }
                 </Flex>
-                <Button
-                    onClick={() => setTodoModal(true)}
-                    size={'sm'} variant={'outline'} colorScheme='red'>+ Add Todo</Button>
+
             </Box>
         </>
     )
