@@ -13,7 +13,7 @@ run build script
 
 Todo extension will be built to the "todo-extension" dir
 
-Then goto chrome extension tab 
+Then goto chrome extension tab <br>
 [chrome://extensions](chrome://extensions/) 
 
 Enable developer mode and load unpacked todo-extension folder 
