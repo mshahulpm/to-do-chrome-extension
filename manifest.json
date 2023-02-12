@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
-    "name": "To-Do",
-    "description": "A simple To do app",
+    "name": "My Todo",
+    "description": "A simple To do extension",
     "version": "1",
     "author": "Mohammed Shahul",
     "action": {
