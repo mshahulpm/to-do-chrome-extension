@@ -1,19 +1,21 @@
-## My Todo Web extension 
+## My Todo PWA  
 
 clone this repo 
-install node modules
 ```shell
-yarn
+git clone https://github.com/mshahulpm/to-do-chrome-extension.git 
+```
+checkout to branch main
+```shell
+git checkout pwa 
+```
+install node modules and build
+```shell
+yarn && yarn build
 ```
 
-run build script 
+preview application
 ```shell
-./build.sh
+yarn preview
 ```
+go to [http://localhost:4173](http://localhost:4173) and install as pwa  
 
-Todo extension will be built to the "todo-extension" dir
-
-Then goto chrome extension tab <br>
-[chrome://extensions](chrome://extensions/) 
-
-Enable developer mode and load unpacked todo-extension folder 
