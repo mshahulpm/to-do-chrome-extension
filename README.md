@@ -17,3 +17,5 @@ Then goto chrome extension tab <br>
 [chrome://extensions](chrome://extensions/) 
 
 Enable developer mode and load unpacked todo-extension folder 
+
+### For Pwa checkout branch (pwa)
